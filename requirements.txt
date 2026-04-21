@@ -1,0 +1,11 @@
+streamlit>=1.38
+ultralytics>=8.3
+torch>=2.1
+numpy
+pandas
+pillow
+scikit-learn
+mrcfile
+plotly
+matplotlib
+huggingface_hub

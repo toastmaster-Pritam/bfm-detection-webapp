@@ -1,0 +1,31 @@
+# Demo tomograms (auto-downloaded from HuggingFace on first run)
+assets/demo_tomograms/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp files from download scripts
+weights/_kaggle_output/
+weights/_gdrive_ckpt/

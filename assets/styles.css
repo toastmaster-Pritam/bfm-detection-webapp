@@ -1,0 +1,132 @@
+/* ═══════════════════════════════════════════════════════════════
+   BFM Detection Webapp — Custom Streamlit Theme
+   CNN–Transformer Ensemble (Config. E) + DBSCAN
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ---- Sidebar ---- */
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #0a1628 0%, #162236 50%, #1a2c42 100%);
+}
+[data-testid="stSidebar"] * {
+    color: #d0dae6 !important;
+}
+[data-testid="stSidebar"] .stSlider label,
+[data-testid="stSidebar"] .stSelectbox label {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+[data-testid="stSidebar"] h2 {
+    font-size: 1.2rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #7eb8e2 !important;
+    border-bottom: 1px solid #2a3f55;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+[data-testid="stSidebar"] h4 {
+    font-size: 0.85rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #98b8d8 !important;
+    margin-top: 1.2rem;
+    margin-bottom: 0.4rem;
+}
+
+/* ---- Header ---- */
+.subtitle {
+    color: #6b8aad;
+    font-size: 1.05rem;
+    margin-top: -0.5rem;
+    margin-bottom: 0.3rem;
+    font-weight: 400;
+}
+.header-rule {
+    border: none;
+    border-top: 2px solid #2a3f55;
+    margin-top: 0.2rem;
+    margin-bottom: 1.2rem;
+}
+
+/* ---- Tabs ---- */
+div.stTabs [data-baseweb="tab-list"] {
+    gap: 0;
+}
+div.stTabs [data-baseweb="tab-list"] button {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px 6px 0 0;
+    transition: background 0.15s ease;
+}
+div.stTabs [data-baseweb="tab-list"] button:hover {
+    background: rgba(126, 184, 226, 0.08);
+}
+div.stTabs [data-baseweb="tab-list"] button[aria-selected="true"] {
+    border-bottom: 3px solid #48c78e;
+}
+
+/* ---- Metrics ---- */
+[data-testid="stMetric"] {
+    background: linear-gradient(135deg, #0f1d2e 0%, #162236 100%);
+    border: 1px solid #2a3f55;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+[data-testid="stMetric"] label {
+    color: #7eb8e2 !important;
+    font-size: 0.78rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+[data-testid="stMetric"] [data-testid="stMetricValue"] {
+    font-size: 1.6rem !important;
+    font-weight: 700;
+}
+
+/* ---- Motor count banner ---- */
+.motor-count-banner {
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.01em;
+}
+
+/* ---- Buttons ---- */
+.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #48c78e 0%, #3aab7a 100%);
+    border: none;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    transition: transform 0.1s ease, box-shadow 0.15s ease;
+}
+.stButton > button[kind="primary"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(72, 199, 142, 0.3);
+}
+
+/* ---- Download button ---- */
+.stDownloadButton > button {
+    border-radius: 6px;
+}
+
+/* ---- Expander ---- */
+.streamlit-expanderHeader {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* ---- Images in viewer ---- */
+[data-testid="stImage"] {
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* ---- Success / Info / Warning boxes ---- */
+.stAlert {
+    border-radius: 8px;
+}
