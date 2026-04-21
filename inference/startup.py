@@ -1,14 +1,18 @@
 """
 One-time startup tasks: ensure demo tomograms are available.
 
-On Streamlit Cloud the repo won't include the ~75 MB of demo JPEG slices,
+On Streamlit Cloud the repo won't include the ~600 MB of demo JPEG slices,
 so we download them from HuggingFace the first time the app boots.
-The result is cached with @st.cache_resource so it runs only once per
-deployment / container restart.
+
+IMPORTANT: The .npy volumes on HuggingFace are ~1 GB each when loaded
+fully into RAM.  Streamlit Cloud free tier only has 1 GB total, so we
+use memory-mapped loading (mmap_mode='r') and process one slice at a
+time to keep peak memory under ~100 MB.
 """
 
 from __future__ import annotations
 
+import gc
 from pathlib import Path
 
 import streamlit as st
@@ -32,7 +36,10 @@ def _tomo_ready(tomo_id: str) -> bool:
 
 
 def _download_one(tomo_id: str) -> bool:
-    """Download a single .npy volume and convert to JPEG slices."""
+    """
+    Download a single .npy volume from HuggingFace and convert it to
+    JPEG slices using memory-mapped I/O to stay within ~100 MB RAM.
+    """
     import numpy as np
     from PIL import Image
 
@@ -53,17 +60,31 @@ def _download_one(tomo_id: str) -> bool:
     except Exception:
         return False
 
-    vol = np.load(local)
-    p2, p98 = np.percentile(vol, 2), np.percentile(vol, 98)
-    if p98 - p2 < 1e-6:
-        norm = np.zeros_like(vol, dtype=np.uint8)
-    else:
-        norm = np.uint8(255.0 * np.clip((vol - p2) / (p98 - p2), 0, 1))
+    vol = np.load(local, mmap_mode="r")
+    n_slices = vol.shape[0]
 
-    for z in range(norm.shape[0]):
-        Image.fromarray(norm[z], mode="L").save(
-            out_dir / f"slice_{z:04d}.jpg", quality=90
-        )
+    # Estimate percentiles from a sparse sample (~10 slices) instead of
+    # loading the full volume into RAM for np.percentile().
+    sample_indices = np.linspace(0, n_slices - 1, min(10, n_slices), dtype=int)
+    sample_pixels = np.concatenate(
+        [vol[i].ravel()[::64].astype(np.float32) for i in sample_indices]
+    )
+    p2 = float(np.percentile(sample_pixels, 2))
+    p98 = float(np.percentile(sample_pixels, 98))
+    del sample_pixels
+    gc.collect()
+
+    denom = max(p98 - p2, 1e-6)
+
+    for z in range(n_slices):
+        arr = vol[z].astype(np.float32)
+        normed = np.clip((arr - p2) / denom, 0.0, 1.0)
+        img = Image.fromarray((normed * 255).astype(np.uint8), mode="L")
+        img.save(out_dir / f"slice_{z:04d}.jpg", quality=85)
+        del arr, normed, img
+
+    del vol
+    gc.collect()
     return True
 
 
@@ -80,15 +101,15 @@ def ensure_demo_data() -> int:
         return len(DEMO_TOMOS)
 
     placeholder = st.empty()
-    placeholder.info(
-        f"Downloading {len(missing)} demo tomogram(s) from HuggingFace "
-        f"(first run only)…"
-    )
+    ok = len(DEMO_TOMOS) - len(missing)
 
-    ready = len(DEMO_TOMOS) - len(missing)
-    for tid in missing:
+    for i, tid in enumerate(missing, 1):
+        placeholder.info(
+            f"Downloading demo tomogram {i}/{len(missing)} "
+            f"(**{tid}**) from HuggingFace — first run only…"
+        )
         if _download_one(tid):
-            ready += 1
+            ok += 1
 
     placeholder.empty()
-    return ready
+    return ok
