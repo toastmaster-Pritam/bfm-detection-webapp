@@ -96,12 +96,3 @@ webapp/
 ├── .gitignore
 └── README.md
 ```
-
-## Model weights
-
-The `weights/best.pt` file is a YOLOv8m checkpoint trained on the MotorBench
-dataset. It was obtained from:
-[Kaggle — flagellar-motor-detection-2-3-yolo-training](https://www.kaggle.com/code/ravaghi/flagellar-motor-detection-2-3-yolo-training)
-
-To retrain or use a different checkpoint, replace `weights/best.pt` with your
-own Ultralytics `.pt` file.
